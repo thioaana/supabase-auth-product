@@ -66,3 +66,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Preserve Bootstrap navbar link styles from Tailwind reset */
+.navbar-dark .nav-link {
+  color: rgba(255, 255, 255, 0.55);
+}
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link:focus {
+  color: rgba(255, 255, 255, 0.75);
+}
+.navbar-dark .navbar-brand {
+  color: #fff;
+}

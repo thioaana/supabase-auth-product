@@ -39,8 +39,7 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
         toast.success("Proposal added successfully");
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      window.location.href = "/dashboard";
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {

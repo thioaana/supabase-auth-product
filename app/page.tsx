@@ -9,8 +9,9 @@ export default function Home() {
         <div className="container text-center py-5">
             {/* <!-- Hero Section --> */}
             <header className="mb-5">
-              <h1 className="display-4 fw-bold">Welcome to SupaNext</h1>
+              <h1 className="display-4 fw-bold">Welcome to Agro Proposal</h1>
               <p className="lead">A powerful Next.js application with Supabase integration</p>
+
               <button className="btn btn-primary btn-lg">Get Started</button>
             </header>
 
@@ -20,7 +21,7 @@ export default function Home() {
                   <div className="card shadow-sm">
                       <div className="card-body">
                           <h5 className="card-title">Fast & Secure</h5>
-                          <p className="card-text">Built with Next.js and Supabase for speed and security using middleware.</p>
+                          <p className="card-text">Create and Update New Farmers Proposals</p>
                       </div>
                   </div>
               </div>
@@ -36,7 +37,7 @@ export default function Home() {
                   <div className="card shadow-sm">
                       <div className="card-body">
                           <h5 className="card-title">Database & Storage</h5>
-                          <p className="card-text">Manage data effortlessly with Supabases PostgreSQL and storage.</p>
+                          <p className="card-text">Presents full table of Proposals in DB</p>
                       </div>
                   </div>
               </div>

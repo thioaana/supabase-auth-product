@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LogoutButton } from "@/components/logout-button";
+import { Button } from "@/components/ui/button";
 
 interface NavBarClientProps {
   isLoggedIn: boolean;
@@ -26,15 +27,15 @@ export function NavBarClient({ isLoggedIn }: NavBarClientProps) {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
-        <ul className="navbar-nav ms-auto align-items-center gap-2">
+      <div className="d-flex ms-auto">
+        <ul className="navbar-nav align-items-center gap-3">
           <li className="nav-item">
-            <Link href="/new-proposal" className="nav-link" onClick={() => setIsOpen(false)}>
+            <Link href="/new-proposal" className="nav-link" style={{ color: "white" }} onClick={() => setIsOpen(false)}>
               New Proposal
             </Link>
           </li>
           <li className="nav-item">
-            <Link href="/dashboard" className="nav-link" onClick={() => setIsOpen(false)}>
+            <Link href="/dashboard" className="nav-link" style={{ color: "white" }} onClick={() => setIsOpen(false)}>
               Dashboard
             </Link>
           </li>
@@ -42,8 +43,8 @@ export function NavBarClient({ isLoggedIn }: NavBarClientProps) {
             {isLoggedIn ? (
               <LogoutButton />
             ) : (
-              <Link href="/auth/login" className="nav-link" onClick={() => setIsOpen(false)}>
-                Login
+              <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                <Button>Login</Button>
               </Link>
             )}
           </li>

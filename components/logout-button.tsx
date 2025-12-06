@@ -13,6 +13,7 @@ export function LogoutButton() {
     await supabase.auth.signOut();
     toast.success("Logged out successfully");
     router.push("/");
+    router.refresh();
   };
 
   return <Button onClick={logout}>Logout</Button>;

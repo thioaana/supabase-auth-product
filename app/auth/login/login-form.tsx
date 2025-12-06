@@ -46,8 +46,9 @@ export function LoginForm({
       await new Promise(resolve => setTimeout(resolve, 50));  
       
       toast.success("Logged in successfully");
-      
-      router.push("/Dashboard");
+
+      router.push("/dashboard");
+      router.refresh();
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {

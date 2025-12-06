@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import { deleteProposal, type Proposal } from "@/lib/services/agroService";
 
 interface DashboardTableProps {
@@ -17,7 +18,18 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this proposal?")) {
+    const confirmation = await Swal.fire({
+      title: "Delete proposal?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!confirmation.isConfirmed) {
       return;
     }
 
