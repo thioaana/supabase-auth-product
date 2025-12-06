@@ -3,10 +3,8 @@ import "./globals.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Toaster } from "react-hot-toast";
-import { AppUtilsProvider } from "@/context/AppUtils";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
-
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -14,8 +12,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Agro Proposals",
+  description: "Agricultural proposal management system",
 };
 
 export default function RootLayout({
@@ -26,12 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-          <AppUtilsProvider>
-            <Toaster />
-            <NavBar/>
-            {children}
-            <Footer/>
-          </AppUtilsProvider>
+        <Toaster />
+        <NavBar />
+        {children}
+        <Footer />
       </body>
     </html>
   );
