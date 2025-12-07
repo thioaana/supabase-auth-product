@@ -6,10 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import * as yup from "yup";
 import { createProposal, updateProposal, type Proposal } from "@/lib/services/agroService";
 import { generateProposalPdf, generatePdfFileName } from "@/lib/utils/generatePdf";
 import { uploadPdfToStorage, updatePdfInStorage } from "@/lib/services/storageService";
 import { SignaturePad } from "@/components/SignaturePad";
+
+// Validation schema
+const proposalSchema = yup.object({
+  area: yup.string().required("Area is required").max(100, "Area must be less than 100 characters"),
+  plant: yup.string().required("Plant is required").max(100, "Plant must be less than 100 characters"),
+  name: yup.string().required("Name is required").max(100, "Name must be less than 100 characters"),
+  email: yup.string().required("Email is required").email("Invalid email format"),
+});
 
 interface ProposalFormProps {
   initialData: Proposal | null;
@@ -25,13 +34,18 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
   const [email, setEmail] = useState(initialData?.email || "");
   const [signature, setSignature] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
     setLoading(true);
 
     try {
       const formData = { area, plant, name, email };
+
+      // Validate form data
+      await proposalSchema.validate(formData, { abortEarly: false });
 
       // Generate PDF as Blob (include signature if provided)
       const pdfBlob = await generateProposalPdf({
@@ -78,7 +92,15 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
 
       window.location.href = "/dashboard";
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "An error occurred");
+      if (error instanceof yup.ValidationError) {
+        const validationErrors: Record<string, string> = {};
+        error.inner.forEach((err) => {
+          if (err.path) validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        toast.error(error instanceof Error ? error.message : "An error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -93,9 +115,10 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
           type="text"
           value={area}
           onChange={(e) => setArea(e.target.value)}
-          required
           placeholder="Enter area"
+          maxLength={100}
         />
+        {errors.area && <p className="text-sm text-red-500 mt-1">{errors.area}</p>}
       </div>
 
       <div>
@@ -105,9 +128,10 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
           type="text"
           value={plant}
           onChange={(e) => setPlant(e.target.value)}
-          required
           placeholder="Enter plant type"
+          maxLength={100}
         />
+        {errors.plant && <p className="text-sm text-red-500 mt-1">{errors.plant}</p>}
       </div>
 
       <div>
@@ -117,9 +141,10 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
           placeholder="Enter your name"
+          maxLength={100}
         />
+        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
       </div>
 
       <div>
@@ -129,9 +154,9 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
           placeholder="Enter your email"
         />
+        {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
       </div>
 
       <div>

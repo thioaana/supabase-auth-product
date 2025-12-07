@@ -144,7 +144,8 @@ export async function generateProposalPdf(data: ProposalData): Promise<Blob> {
   return doc.output("blob");
 }
 
-// Helper to generate filename
+// Helper to generate filename with random UUID for unpredictability
 export function generatePdfFileName(name: string): string {
-  return `proposal_${name.replace(/\s+/g, "_")}_${Date.now()}.pdf`;
+  const randomId = crypto.randomUUID().slice(0, 8);
+  return `proposal_${name.replace(/\s+/g, "_")}_${randomId}.pdf`;
 }
