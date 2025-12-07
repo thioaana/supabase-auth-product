@@ -5,6 +5,7 @@ export interface ProposalData {
   plant: string;
   name: string;
   email: string;
+  signature?: string;
 }
 
 async function loadImageAsBase64(url: string): Promise<string> {
@@ -93,6 +94,40 @@ export async function generateProposalPdf(data: ProposalData): Promise<Blob> {
     doc.setTextColor(0, 0, 0);
     doc.text(field.value, valueX, y);
   });
+
+  // Signature (if provided)
+  if (data.signature) {
+    const signatureY = 200;
+
+    // Signature label
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(50, 50, 50);
+    doc.text("Signature:", labelX, signatureY);
+
+    // Signature image
+    const signatureWidth = 80;
+    const signatureHeight = 40;
+    const signatureImageY = signatureY + 5;
+
+    try {
+      doc.addImage(
+        data.signature,
+        "PNG",
+        labelX,
+        signatureImageY,
+        signatureWidth,
+        signatureHeight
+      );
+
+      // Line under signature
+      doc.setDrawColor(150, 150, 150);
+      doc.setLineWidth(0.3);
+      doc.line(labelX, signatureImageY + signatureHeight + 2, labelX + signatureWidth, signatureImageY + signatureHeight + 2);
+    } catch (error) {
+      console.error("Failed to add signature to PDF:", error);
+    }
+  }
 
   // Footer
   doc.setFontSize(9);

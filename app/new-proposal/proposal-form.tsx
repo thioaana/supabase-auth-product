@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { createProposal, updateProposal, type Proposal } from "@/lib/services/agroService";
 import { generateProposalPdf, generatePdfFileName } from "@/lib/utils/generatePdf";
 import { uploadPdfToStorage, updatePdfInStorage } from "@/lib/services/storageService";
+import { SignaturePad } from "@/components/SignaturePad";
 
 interface ProposalFormProps {
   initialData: Proposal | null;
@@ -22,6 +23,7 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
   const [plant, setPlant] = useState(initialData?.plant || "");
   const [name, setName] = useState(initialData?.name || "");
   const [email, setEmail] = useState(initialData?.email || "");
+  const [signature, setSignature] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +33,11 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
     try {
       const formData = { area, plant, name, email };
 
-      // Generate PDF as Blob
-      const pdfBlob = await generateProposalPdf(formData);
+      // Generate PDF as Blob (include signature if provided)
+      const pdfBlob = await generateProposalPdf({
+        ...formData,
+        signature: signature || undefined,
+      });
       const fileName = generatePdfFileName(name);
 
       console.log("PDF Blob size:", (pdfBlob.size / 1024).toFixed(2), "KB");
@@ -128,6 +133,13 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="Enter your email"
+        />
+      </div>
+
+      <div>
+        <SignaturePad
+          onSignatureChange={setSignature}
+          disabled={loading}
         />
       </div>
 
