@@ -29,8 +29,14 @@ export function NavBarClient({ isLoggedIn }: NavBarClientProps) {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div className="d-flex ms-auto">
-        <ul className="navbar-nav align-items-center gap-3">
+      <div
+        className="navbar-collapse"
+        id="navbarNav"
+        style={{
+          display: isOpen ? 'flex' : undefined,
+        }}
+      >
+        <ul className="navbar-nav ms-auto align-items-center gap-3">
           <li className="nav-item">
             <Link href="/new-proposal" className="nav-link" style={{ color: "white" }} onClick={() => setIsOpen(false)}>
               New Proposal
