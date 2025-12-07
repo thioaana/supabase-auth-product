@@ -108,3 +108,47 @@ ALTER TABLE agro ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can manage own proposals" ON agro
   FOR ALL USING (auth.uid() = user_id);
 ```
+
+---
+
+## Phase 3: PDF Generation
+
+### Overview
+Generate a PDF containing proposal data with company logo after form submission (create/update).
+
+### Tasks
+
+- [x] 1. Install `jspdf` library for client-side PDF generation
+- [ ] 2. Add company logo to project (user needs to provide logo file) - OPTIONAL
+- [x] 3. Create `lib/utils/generatePdf.ts` - PDF generation utility
+- [x] 4. Update `proposal-form.tsx` to generate and download PDF after successful submit
+- [x] 5. Test PDF generation (build passes)
+
+### PDF Content Layout
+- Company logo at top (centered)
+- Title: "Agro Proposal"
+- Date of submission
+- Form fields: Area, Plant, Name, Email
+
+### Notes
+- Using `jspdf` (client-side) - simple, no server needed
+- Logo needs to be provided by user (PNG/JPG format recommended)
+- PDF downloads automatically after form submit
+
+### Phase 3 Review
+
+**Created `lib/utils/generatePdf.ts`** - PDF generation utility with:
+- Green "AGRO" header text (can be replaced with logo image later)
+- "Agricultural Proposals" subtitle
+- Proposal details: Area, Plant, Name, Email
+- Current date
+- Footer with system attribution
+
+**Updated `proposal-form.tsx`**:
+- Imports `generateProposalPdf` utility
+- Calls PDF generation after successful create/update
+- PDF auto-downloads with filename: `proposal_[name]_[timestamp].pdf`
+
+**To add a logo later:**
+1. Add logo image to project (e.g., `public/logo.png`)
+2. Update `generatePdf.ts` to use `doc.addImage()` instead of text header

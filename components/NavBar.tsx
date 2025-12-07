@@ -8,8 +8,8 @@ export async function NavBar() {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     isLoggedIn = !!user;
-  } catch (error) {
-    console.error("NavBar auth error:", error);
+  } catch {
+    // Auth check failed, user remains logged out
   }
 
   return <NavBarClient isLoggedIn={isLoggedIn} />;

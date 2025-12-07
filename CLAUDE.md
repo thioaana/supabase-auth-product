@@ -7,10 +7,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Next.js 15 + Supabase authentication starter kit. 
 Modern web app template with cookie-based auth, server-side rendering support, and shadcn/ui components.
 The app must have the ability to run in different width of screens even on a mobile phone.
-This project includes 
+This project includes
  - authentication methods using supabase
  - page New Proposal with a form so the user should fill them and a button Add to add the form record in the supabase database.
  - page Dashboard that shows all rows in the database and also buttons Edit and Delete. With Edit user is transfered in page New Proposal where the button will be renamed as Update and the user may change the any current field value.
+ - PDF generation: After submitting a new or updated proposal, a PDF file is created containing the form data with the company logo on top.
  Only Authenticated users can insert/update/delete rows.
  The Agro database will have the columns Area, Plant, Name, e-mail, Date (current date of the insertion).
  Header and NavBar will be same in all pages. Footer is static but NavBar will have at the left the logo that links to the Homepage and on the right New Proposal link, Dashboard link and Login. Login will renamed as Logout if the user is authenticated. 

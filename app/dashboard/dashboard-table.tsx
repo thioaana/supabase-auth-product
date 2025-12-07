@@ -11,6 +11,16 @@ interface DashboardTableProps {
   proposals: Proposal[];
 }
 
+// Validate PDF URL points to Supabase storage
+const isValidPdfUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.endsWith(".supabase.co");
+  } catch {
+    return false;
+  }
+};
+
 export function DashboardTable({ proposals }: DashboardTableProps) {
   const router = useRouter();
 
@@ -84,7 +94,7 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
               <td>{proposal.email}</td>
               <td>{new Date(proposal.created_at).toLocaleDateString()}</td>
               <td>
-                {proposal.pdf_url ? (
+                {proposal.pdf_url && isValidPdfUrl(proposal.pdf_url) ? (
                   <a
                     href={proposal.pdf_url}
                     target="_blank"

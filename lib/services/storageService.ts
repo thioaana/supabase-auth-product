@@ -4,6 +4,17 @@ import { createClient } from "@/lib/supabase/server";
 
 const BUCKET_NAME = "proposals";
 
+// Validate PDF magic bytes (%PDF)
+function isValidPdf(bytes: Uint8Array): boolean {
+  if (bytes.length < 4) return false;
+  return bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46;
+}
+
+// Validate file belongs to user
+function isUserOwned(filePath: string, userId: string): boolean {
+  return filePath.startsWith(`${userId}/`);
+}
+
 export async function uploadPdfToStorage(
   pdfBase64: string,
   fileName: string
@@ -23,6 +34,11 @@ export async function uploadPdfToStorage(
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Validate PDF content
+  if (!isValidPdf(bytes)) {
+    return { success: false, error: "Invalid PDF file" };
   }
 
   // Upload to storage with user folder structure
@@ -61,12 +77,14 @@ export async function updatePdfInStorage(
     return { success: false, error: "Not authenticated" };
   }
 
-  // Delete old PDF if exists
+  // Delete old PDF if exists (verify ownership first)
   if (oldPdfUrl) {
     const urlParts = oldPdfUrl.split(`${BUCKET_NAME}/`);
     if (urlParts.length >= 2) {
       const oldFilePath = urlParts[1];
-      await supabase.storage.from(BUCKET_NAME).remove([oldFilePath]);
+      if (isUserOwned(oldFilePath, user.id)) {
+        await supabase.storage.from(BUCKET_NAME).remove([oldFilePath]);
+      }
     }
   }
 
@@ -76,6 +94,11 @@ export async function updatePdfInStorage(
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Validate PDF content
+  if (!isValidPdf(bytes)) {
+    return { success: false, error: "Invalid PDF file" };
   }
 
   // Upload new PDF
@@ -124,6 +147,11 @@ export async function deletePdfFromStorage(
     return { success: false, error: "Invalid PDF URL" };
   }
   const filePath = urlParts[1];
+
+  // Verify file belongs to current user
+  if (!isUserOwned(filePath, user.id)) {
+    return { success: false, error: "Unauthorized" };
+  }
 
   const { error } = await supabase.storage.from(BUCKET_NAME).remove([filePath]);
 

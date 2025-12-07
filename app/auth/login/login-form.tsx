@@ -49,8 +49,8 @@ export function LoginForm({
 
       router.push("/dashboard");
       router.refresh();
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+    } catch {
+      setError("Invalid email or password. Please try again.");
     } finally {
       setIsLoading(false);
     }

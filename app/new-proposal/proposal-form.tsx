@@ -40,8 +40,6 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
       });
       const fileName = generatePdfFileName(name);
 
-      console.log("PDF Blob size:", (pdfBlob.size / 1024).toFixed(2), "KB");
-
       // Convert Blob to base64 for server upload
       const reader = new FileReader();
       const pdfBase64 = await new Promise<string>((resolve, reject) => {

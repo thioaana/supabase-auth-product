@@ -46,14 +46,14 @@ export function SignUpForm({
         password,
         options: {
           data: { full_name: fullName },
-          emailRedirectTo: `${window.location.origin}/Dashboard`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
         },
       });
       if (error) throw error;
       // router.push("/auth/sign-up-success"); // Redirect on successful sign-up
       router.push("/auth/login");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+    } catch {
+      setError("Unable to create account. Please try again.");
     } finally {
       setIsLoading(false);
     }
